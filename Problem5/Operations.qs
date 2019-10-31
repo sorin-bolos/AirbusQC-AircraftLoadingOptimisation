@@ -7,18 +7,17 @@
 
 	   
     operation HelloQ () : Result[] {
-		mutable result = new Result[21];
-        using (qubits = Qubit[21])
+		mutable result = new Result[22];
+        using (qubits = Qubit[22])
         {
-			AllSolutions(qubits);
-			AllSolutions2(qubits);
+			A(qubits);
 
-			//X(qubits[18]);
-		    //H(qubits[18]);
+			X(qubits[21]);
+		    H(qubits[21]);
 
-			//AmplitudeAmplification(qubits);
+			AmplitudeAmplification(qubits);
 			
-			for (i in 0..20)
+			for (i in 0..21)
 			{
 				set result w/= i <- M(qubits[i]);
 			}
@@ -31,28 +30,28 @@
 	operation AmplitudeAmplification(qubits: Qubit[]) : Unit {
 		Oracle(qubits);
 
-		(Adjoint AllSolutions)(qubits);
+		(Adjoint A)(qubits);
 
 		PhaseShift(qubits);
 
-		AllSolutions(qubits);
+		A(qubits);
 	}
 
 	operation Oracle(qubits: Qubit[]) : Unit {
-			Controlled AddInt([qubits[13]],(qubits[4..8] , 2));
-			Controlled AddInt([qubits[14]],(qubits[4..8] , 4));
-			Controlled AddInt([qubits[15]],(qubits[4..8] , 3));
-			Controlled AddInt([qubits[16]],(qubits[4..8] , 3));
-			Controlled AddInt([qubits[17]],(qubits[4..8] , 3));
+			Controlled AddInt([qubits[9]],(qubits[4..8] , 2));
+			Controlled AddInt([qubits[10]],(qubits[4..8] , 4));
+			Controlled AddInt([qubits[18]],(qubits[4..8] , 3));
+			Controlled AddInt([qubits[19]],(qubits[4..8] , 3));
+			Controlled AddInt([qubits[20]],(qubits[4..8] , 3));
 
-			let min = [0,0,1,1,1];
-			GreaterThanInt(qubits[4..8], min, qubits[18]);
+			let min = [0,1,0,0,0];
+			GreaterThanInt(qubits[4..8], min, qubits[21]);
 
-			Controlled Adjoint AddInt([qubits[13]],(qubits[4..8] , 2));
-			Controlled Adjoint AddInt([qubits[14]],(qubits[4..8] , 4));
-			Controlled Adjoint AddInt([qubits[15]],(qubits[4..8] , 3));
-			Controlled Adjoint AddInt([qubits[16]],(qubits[4..8] , 3));
-			Controlled Adjoint AddInt([qubits[17]],(qubits[4..8] , 3));
+			Controlled Adjoint AddInt([qubits[20]],(qubits[4..8] , 3));
+			Controlled Adjoint AddInt([qubits[19]],(qubits[4..8] , 3));
+			Controlled Adjoint AddInt([qubits[18]],(qubits[4..8] , 3));
+			Controlled Adjoint AddInt([qubits[10]],(qubits[4..8] , 4));
+			Controlled Adjoint AddInt([qubits[9]],(qubits[4..8] , 2));
 	}
 
 	operation AddInt(qubits: Qubit[], x: Int) : Unit {
@@ -76,8 +75,14 @@
 		X(qubits[15]);
 		X(qubits[16]);
 		X(qubits[17]);
+		X(qubits[9]);
+		X(qubits[10]);
+		X(qubits[18]);
+		X(qubits[19]);
+		X(qubits[20]);
 
-		Controlled Z([qubits[0], qubits[1], qubits[2], qubits[3], qubits[13], qubits[14], qubits[15], qubits[16]], qubits[17]);
+
+		Controlled Z([qubits[0], qubits[1], qubits[2], qubits[3], qubits[13], qubits[14], qubits[15], qubits[16], qubits[17], qubits[9], qubits[10], qubits[18], qubits[19]], qubits[20]);
 
 		X(qubits[0]);
 		X(qubits[1]);
@@ -88,6 +93,17 @@
 		X(qubits[15]);
 		X(qubits[16]);
 		X(qubits[17]);
+		X(qubits[9]);
+		X(qubits[10]);
+		X(qubits[18]);
+		X(qubits[19]);
+		X(qubits[20]);
+	}
+
+	operation A(qubits: Qubit[]) : Unit 
+	is Adj {
+		AllSolutions(qubits);
+		AllSolutions2(qubits);
 	}
 
 	operation AllSolutions(qubits: Qubit[]) : Unit {
@@ -95,7 +111,7 @@
 			let volumes = [1, 4, 2, 2, 2];
 			let weights = [2, 4, 3, 3, 3];
 			let maxVolume = [0, 0, 1, 1, 0];
-			let maxWeight = [1, 0, 0, 0, 0];
+			let maxWeight = [0, 1, 0, 1, 0];
 			
 			FullShuffle(qubits[0..3]);
 
@@ -168,7 +184,7 @@
 			let volumes = [1, 4, 2, 2, 2];
 			let weights = [2, 4, 3, 3, 3];
 			let maxVolume = [0, 0, 1, 1, 0];
-			let maxWeight = [1, 0, 0, 0, 0];
+			let maxWeight = [0, 1, 0, 1, 0];
 
 			ComputeSum(0, [qubits[9], qubits[14], qubits[15], qubits[16], qubits[17]], volumes, qubits[4..8]);
 			LessOrEqualThanInt(qubits[4..8], maxVolume, qubits[12]);
